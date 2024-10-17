@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import CardCharacter from "./components/CardCharacter";
-import { Stack, TextField, Typography } from "@mui/material";
+import { CircularProgress, Stack, TextField, Typography } from "@mui/material";
 
 function App() {
   const [data, setData] = useState([]);
@@ -91,7 +91,7 @@ function App() {
         }}
       >
         {loading ? (
-          <Typography variant="h2">Cargando...</Typography>
+          <CircularProgress />
         ) : listFilter.length > 0 ? (
           listFilter.map((item) => {
             return (
