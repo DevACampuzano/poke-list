@@ -1,29 +1,42 @@
 import { useState, useEffect } from "react";
 
 import CardCharacter from "./components/CardCharacter";
-import { CircularProgress, Stack, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 function App() {
   const [data, setData] = useState([]);
   const [listFilter, setListFilter] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [loading2, setLoading2] = useState(true);
+  const [page, setPage] = useState("https://rickandmortyapi.com/api/character");
 
   const handleChange = (e) => {
     setSearch(e.target.value);
   };
 
   const getData = async () => {
-    const responde = await fetch("https://rickandmortyapi.com/api/character", {
+    setLoading2(true);
+    const responde = await fetch(page, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
     const json = await responde.json();
-    setData(json.results);
-    setListFilter(json.results);
+    setPage(json.info.next);
+    console.log(json.info.next);
+    const list = [...data, ...json.results];
+    setData(list);
+    setListFilter(list);
     setLoading(false);
+    setLoading2(false);
   };
 
   useEffect(() => {
@@ -54,6 +67,7 @@ function App() {
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "center",
+        paddingY: "20px",
       }}
     >
       <Stack
@@ -109,6 +123,11 @@ function App() {
           <Typography variant="h2"> No se encontraron datos.</Typography>
         )}
       </Stack>
+      {!loading2 && (
+        <Button variant="contained" onClick={getData}>
+          Siguientes en la lista
+        </Button>
+      )}
     </Stack>
   );
 }
